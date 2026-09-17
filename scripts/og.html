@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>OG — Tatiane Cavalcanti</title>
+  <!-- Imagem de compartilhamento (1200×630). Screenshot via Playwright: ver README -->
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+    body { background: var(--bg); }
+    .og {
+      position: relative; width: 1200px; height: 630px; overflow: hidden;
+      background:
+        radial-gradient(55% 70% at 88% 10%, rgba(201, 168, 106, .20), transparent 70%),
+        radial-gradient(40% 50% at 10% 100%, rgba(201, 168, 106, .08), transparent 70%),
+        var(--bg);
+    }
+    .og__text { position: absolute; left: 88px; top: 96px; width: 640px; }
+    .og .mark { width: 76px; height: 76px; font-size: 30px; }
+    .og__name { margin: 30px 0 18px; font: 600 108px/.92 var(--f-display); letter-spacing: -.01em; }
+    .og__name span { display: block; color: var(--ink); }
+    .og__name em { display: block; font-style: normal; color: var(--gold); }
+    .og__role { font: 500 19px/1.4 var(--f-body); letter-spacing: .28em; text-transform: uppercase; color: var(--mut); }
+    .og__role b { color: var(--gold); font-weight: 500; margin: 0 6px; }
+    .og__tag { margin: 26px 0 0; font: 400 24px/1.45 var(--f-body); color: var(--ink-2); max-width: 560px; }
+    .og__tag strong { color: var(--gold); font-weight: 500; }
+    .og__photo { position: absolute; right: 56px; top: 0; height: 630px; width: 470px; overflow: hidden; }
+    .og__photo img { height: 680px; width: auto; display: block; margin-top: 10px;
+      -webkit-mask-image: linear-gradient(#000 78%, transparent 100%); mask-image: linear-gradient(#000 78%, transparent 100%); }
+    .og__arc { position: absolute; right: -40px; top: -160px; width: 560px; height: 560px; border-radius: 50%;
+      border: 1px solid var(--line); border-left-color: transparent; border-bottom-color: transparent; transform: rotate(-20deg); }
+    .og__star { position: absolute; color: var(--gold); }
+  </style>
+</head>
+<body>
+  <div class="og">
+    <span class="og__arc"></span>
+    <div class="og__text">
+      <span class="mark">TC</span>
+      <h1 class="og__name"><span>Tatiane</span><em>Cavalcanti</em></h1>
+      <p class="og__role">UGC Creator <b>•</b> Furo Humanizado</p>
+      <p class="og__tag">Conteúdo que conecta marcas e pessoas com <strong>criatividade</strong>, <strong>estratégia</strong> e <strong>autenticidade</strong>.</p>
+    </div>
+    <div class="og__photo"><img src="../assets/tati.png" alt=""></div>
+    <svg class="og__star" style="left:760px;top:80px;width:26px;height:26px" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.6 4.8 10.8 12 12-7.2 1.2-11.4 5.4-12 12-.6-6.6-4.8-10.8-12-12C7.2 10.8 11.4 6.6 12 0z"/></svg>
+    <svg class="og__star" style="left:1120px;top:470px;width:18px;height:18px;opacity:.7" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.6 4.8 10.8 12 12-7.2 1.2-11.4 5.4-12 12-.6-6.6-4.8-10.8-12-12C7.2 10.8 11.4 6.6 12 0z"/></svg>
+  </div>
+</body>
+</html>

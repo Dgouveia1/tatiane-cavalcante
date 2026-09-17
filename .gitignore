@@ -1,0 +1,18 @@
+# credenciais / ambiente
+.env
+.env.*
+
+# artefatos gerados
+dist/
+
+# foto original (não publicar)
+scripts/_raw/
+
+# python / node
+__pycache__/
+*.pyc
+node_modules/
+
+# SO / editor
+.DS_Store
+Thumbs.db
