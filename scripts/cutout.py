@@ -27,9 +27,9 @@ OUT_WEBP = ROOT / "assets" / "tati.webp"
 OUT_PNG = ROOT / "assets" / "tati.png"
 PREVIEW = ROOT / "scripts" / "_raw" / "preview.png"
 
-CROP_Y1 = None         # None = corpo inteiro (cabeça aos sapatos). Use 520 para cortar acima do rodapé/chão (até o joelho)
+CROP_Y1 = 520          # corta acima do rodapé/chão (cabeça ao joelho, como no mockup). None = corpo inteiro
 RECT = (395, 15, 770)  # x0, y0, x1 do retângulo "provavelmente frente" (y1 = CROP_Y1)
-OUT_HEIGHT = 960       # altura final em px (largura segue a proporção); exibida a no máx. ~250 css px de largura => 2x DPR
+OUT_HEIGHT = 760       # altura final em px (largura segue a proporção); exibida a no máx. ~230 css px de largura => 2x DPR
 
 # modelo do rembg, para o caminho WASM (git-ignored; ~176 MB)
 ISNET_URL = "https://github.com/danielgatis/rembg/releases/download/v0.0.0/isnet-general-use.onnx"

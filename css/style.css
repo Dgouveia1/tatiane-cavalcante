@@ -119,18 +119,19 @@ button { font: inherit; color: inherit; }
 /* =====================================================================
    HERO
    ===================================================================== */
-.hero {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 46%;
-  grid-template-areas:
-    "text photo"
-    "cta  cta";
-  column-gap: 12px;
+/* A foto fica num plano atrás (absoluta, à direita). Monograma/nome/cargo ocupam a coluna livre ao lado
+   do tronco; tagline e botões passam por cima só da cintura para baixo, onde a foto esmaece. */
+.hero { position: relative; --photo-w: 58%; --bleed: 20px; }
+.hero__text {
+  position: relative; z-index: 1; min-width: 0;
+  width: calc(100% - var(--photo-w)); padding-right: 8px;
+  /* celular: garante que a tagline (abaixo) comece só depois das mãos/notebook (~68% da altura da foto) */
+  min-height: calc((.58 * (100vw - 40px) + 20px) / .679 * .68);
 }
-.hero__text  { grid-area: text; align-self: start; min-width: 0; }
-.hero__photo { grid-area: photo; align-self: start; }
-.hero__cta   { grid-area: cta; }
+/* a foto sangra na margem direita da página (como no mockup, cortada na borda) */
+.hero__photo { position: absolute; top: 0; right: calc(-1 * var(--bleed)); z-index: 0; width: calc(var(--photo-w) + var(--bleed)); }
+.hero__tagline { position: relative; z-index: 1; max-width: 72%; }  /* fica à esquerda das pernas */
+.hero__cta { position: relative; z-index: 1; }
 
 .hero__mark { position: relative; display: inline-block; }
 .mark {
@@ -143,7 +144,7 @@ button { font: inherit; color: inherit; }
 
 .hero__name {
   margin: 16px 0 10px;
-  font: 600 clamp(32px, 10vw, 58px)/.95 var(--f-display);
+  font: 600 clamp(28px, 9vw, 58px)/.95 var(--f-display);
   letter-spacing: -.01em;
 }
 .hero__first, .hero__last { display: block; }
@@ -169,15 +170,17 @@ button { font: inherit; color: inherit; }
 .hero__dot { color: var(--gold); margin: 0 2px; }
 
 .hero__tagline {
-  margin: 12px 0 0;
+  margin: 14px 0 0;
   font-size: 14.5px; line-height: 1.55;
   color: var(--ink-2);
 }
 .hero__tagline strong { color: var(--gold); font-weight: 500; }
 
-.hero__photo {
-  position: relative; margin: 0; overflow: hidden;
-  will-change: transform;
+.hero__photo { margin: 0; overflow: hidden; will-change: transform; }
+/* da cintura para baixo a foto some no fundo: é por aí que tagline e botões passam */
+.hero__photo::after {
+  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(to bottom, transparent 56%, rgba(14, 14, 14, .6) 76%, var(--bg) 97%);
 }
 .hero__arc {
   position: absolute; z-index: 0;
@@ -188,27 +191,23 @@ button { font: inherit; color: inherit; }
   transform: rotate(38deg);
   background: radial-gradient(circle at 50% 40%, rgba(201, 168, 106, .10), transparent 65%);
 }
-.hero__pic { position: relative; z-index: 1; display: block; }  /* corpo inteiro: sem esmaecer os pés */
+.hero__pic { position: relative; z-index: 1; display: block; }
 .hero__pic img { width: 100%; height: auto; }
 
 .hero__cta { margin-top: 20px; }
 .hero__cta .group + .group { margin-top: 18px; }
 
 @media (min-width: 520px) {
-  .hero {
-    grid-template-columns: minmax(0, 1fr) 48%;
-    grid-template-areas:
-      "text photo"
-      "cta  photo";
-    column-gap: 16px;
-  }
+  .hero { --photo-w: 50%; }
+  .hero__text { padding-right: 16px; min-height: 0; }
+  .hero__tagline { max-width: calc(100% - var(--photo-w)); padding-right: 16px; }  /* não invade o tronco */
   .hero__cta { margin-top: 24px; }
 }
 
 /* =====================================================================
    BOTÕES / GRUPOS
    ===================================================================== */
-.links { margin-top: 18px; }
+.links { position: relative; z-index: 1; margin-top: 18px; }
 .links .group + .group { margin-top: 18px; }
 
 .group { display: flex; flex-direction: column; gap: 10px; }
@@ -228,7 +227,7 @@ button { font: inherit; color: inherit; }
   padding: 7px 14px 7px 7px;
   border: 1px solid var(--line);
   border-radius: var(--pill);
-  background: rgba(255, 255, 255, .02);
+  background: rgba(14, 14, 14, .6);
   color: var(--ink);
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
