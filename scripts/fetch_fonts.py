@@ -14,7 +14,8 @@ ROOT = Path(__file__).resolve().parent.parent
 FONTS_DIR = ROOT / "assets" / "fonts"
 OUT_CSS = ROOT / "css" / "fonts.css"
 
-FAMILIES = "family=Cormorant+Garamond:wght@600&family=Inter:wght@400;500;600&family=Great+Vibes&display=swap"
+# Inter é variável: pedir o intervalo 400..600 devolve UM arquivo com font-weight "400 600"
+FAMILIES = "family=Cormorant+Garamond:wght@600&family=Inter:wght@400..600&family=Great+Vibes&display=swap"
 CSS_URL = f"https://fonts.googleapis.com/css2?{FAMILIES}"
 # UA moderno => o Google devolve woff2 com unicode-range por subset
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -49,7 +50,7 @@ def main() -> None:
         unicode_range = prop(body, "unicode-range")
 
         slug = family.lower().replace(" ", "-")
-        fname = f"{slug}-{weight}{'-italic' if style == 'italic' else ''}.woff2"
+        fname = f"{slug}-{weight.replace(' ', '-')}{'-italic' if style == 'italic' else ''}.woff2"
         (FONTS_DIR / fname).write_bytes(fetch(url))
         rules.append(
             "@font-face {\n"

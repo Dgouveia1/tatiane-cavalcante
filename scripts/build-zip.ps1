@@ -37,7 +37,7 @@ try {
 }
 
 $size = [math]::Round((Get-Item $zip).Length / 1KB)
-Write-Host "OK -> $zip ($size KB)"
+Write-Host "OK -> $zip ($size KB) gerado em $(Get-Date -Format 'dd/MM/yyyy HH:mm')"
 Write-Host "Conteudo:"
 $check = [System.IO.Compression.ZipFile]::OpenRead($zip)
 try { $check.Entries | ForEach-Object { Write-Host ("  " + $_.FullName) } } finally { $check.Dispose() }

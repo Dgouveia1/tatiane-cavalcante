@@ -21,13 +21,20 @@
   --shadow: 0 10px 30px rgba(0, 0, 0, .45);
   --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 40px; --s8: 48px;
   --col: 560px;
-  --f-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --f-display: "Cormorant Garamond", "Cormorant Fallback", Georgia, "Times New Roman", serif;
   --f-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --f-script: "Great Vibes", "Brush Script MT", cursive;
   --ease: cubic-bezier(.22, 1, .36, 1);
   --dur-1: .25s;
   --dur-2: .6s;
   --dur-3: .8s;
+}
+
+/* fallback do display com largura ajustada (Georgia é ~30% mais larga que Cormorant): menos salto no swap */
+@font-face {
+  font-family: "Cormorant Fallback";
+  src: local("Georgia"), local("Times New Roman");
+  size-adjust: 77%;
 }
 
 /* ---------- reset ---------- */
@@ -60,7 +67,7 @@ button { font: inherit; color: inherit; }
   transition: top var(--dur-1);
 }
 .skip:focus { top: 12px; }
-:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 6px; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
 /* ---------- fundo ---------- */
 .glow {
@@ -89,6 +96,7 @@ button { font: inherit; color: inherit; }
 }
 .eyebrow--gold { color: var(--gold); }
 .eyebrow--rule { display: flex; align-items: center; gap: 14px; text-align: center; }
+.eyebrow--rule > span { white-space: nowrap; }
 .eyebrow--rule::before, .eyebrow--rule::after { content: ""; flex: 1; height: 1px; }
 .eyebrow--rule::before { background: linear-gradient(90deg, transparent, var(--line)); }
 .eyebrow--rule::after  { background: linear-gradient(90deg, var(--line), transparent); }
@@ -140,7 +148,8 @@ button { font: inherit; color: inherit; }
 }
 .hero__first, .hero__last { display: block; }
 .hero__first { color: var(--ink); }
-.hero__last { font-style: normal; color: var(--gold); }
+/* inline-block: com background-clip:text, glifos fora da caixa sumiriam — assim a caixa cresce com o texto */
+.hero__last { display: inline-block; white-space: nowrap; font-style: normal; color: var(--gold); }
 @supports ((-webkit-background-clip: text) or (background-clip: text)) {
   .hero__last {
     background: linear-gradient(100deg, var(--gold) 0%, var(--gold) 40%, #fff2d2 50%, var(--gold) 60%, var(--gold) 100%);
@@ -150,12 +159,13 @@ button { font: inherit; color: inherit; }
     -webkit-text-fill-color: transparent; color: transparent;
   }
   .js .hero.in .hero__last { animation: shimmer 1.6s var(--ease) .7s 1 both; }
-  .hero__last:hover { animation: shimmer-again 1.2s ease 0s 1 both; }
+  .hero__last:hover, .js .hero.in .hero__last:hover { animation: shimmer-again 1.2s ease 0s 1 both; }
 }
 @keyframes shimmer       { from { background-position: 120% 0; } to { background-position: -30% 0; } }
 @keyframes shimmer-again { from { background-position: 120% 0; } to { background-position: -30% 0; } }
 
 .hero__role { color: var(--mut); letter-spacing: .16em; }
+.nowrap { white-space: nowrap; }
 .hero__dot { color: var(--gold); margin: 0 2px; }
 
 .hero__tagline {
@@ -246,8 +256,9 @@ button { font: inherit; color: inherit; }
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .btn__sub {
-  display: block; margin-top: 1px; font-size: 12.5px; color: var(--mut);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  margin-top: 1px; font-size: 12.5px; line-height: 1.35; color: var(--mut);
+  overflow: hidden;
 }
 .btn__chev { width: 20px; height: 20px; color: var(--gold); transition: transform var(--dur-1) var(--ease); }
 
@@ -385,10 +396,10 @@ button { font: inherit; color: inherit; }
 .contact__row { display: flex; align-items: center; gap: 8px; }
 .contact__row a {
   display: flex; align-items: center; gap: 12px;
-  min-height: 40px; min-width: 0;
+  min-height: 40px; min-width: 0; border-radius: 6px;
   color: var(--ink); font-size: 14.5px; text-decoration: none;
 }
-.contact__row a span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.contact__row a span { overflow-wrap: anywhere; }
 .contact__row a svg { flex: none; width: 20px; height: 20px; color: var(--gold); }
 .contact__row a:hover span { color: var(--gold); }
 .copy {
@@ -486,6 +497,14 @@ button { font: inherit; color: inherit; }
   .js .sparkle, .hero__last, .js .hero.in .hero__last { animation: none !important; }
   .btn, .btn__icon, .btn__chev, .copy, .share, .toast { transition: none !important; }
   .hero__pic { transform: none !important; }
+}
+
+/* ---------- telas muito estreitas (≤359px) ---------- */
+@media (max-width: 359px) {
+  .eyebrow--rule { gap: 8px; letter-spacing: .16em; }
+  .contact { gap: 14px; }
+  .contact__qr { width: 108px; height: 108px; }
+  .niche { padding: 0 3px; font-size: 10px; letter-spacing: .1em; }
 }
 
 /* ---------- desktop ---------- */

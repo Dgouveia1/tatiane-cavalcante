@@ -71,7 +71,7 @@ python -m http.server 8080
 ## Publicar no cPanel (HostGator)
 
 1. `powershell -ExecutionPolicy Bypass -File scripts\build-zip.ps1` → gera `dist/tatiane-cavalcante.zip`
-   (só `index.html`, `css/`, `js/`, `assets/`, `.htaccess`).
+   (só `index.html`, `css/`, `js/`, `assets/`, `.htaccess`). **Gere o zip sempre depois da última edição** — o script imprime a data/hora.
 2. cPanel → **Gerenciador de Arquivos** → `public_html` → ative *Configurações → Mostrar arquivos ocultos*.
 3. Apague o `index.html`/`default.html` de exemplo da HostGator, se existir.
 4. **Carregar** o zip → clique com o botão direito → **Extract** → apague o zip.

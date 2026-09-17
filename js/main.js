@@ -38,11 +38,10 @@
     revealEls.forEach(function (el) { io.observe(el); });
   }
 
-  /* ---------- 3. parallax leve (só transform, scroll passivo + rAF) ---------- */
+  /* ---------- 3. parallax leve na foto (só transform, scroll passivo + rAF) ---------- */
   function setupParallax() {
     if (reduce || !hero) return;
     var pic = hero.querySelector('.hero__pic');
-    var mark = hero.querySelector('.hero__mark');
     if (!pic) return;
     var ticking = false;
     function update() {
@@ -50,7 +49,6 @@
       var y = window.scrollY || window.pageYOffset;
       if (y > 700) return; // hero já saiu da tela
       pic.style.transform = 'translate3d(0,' + (y * -0.08).toFixed(1) + 'px,0)';
-      if (mark) mark.style.transform = 'translate3d(0,' + (y * 0.04).toFixed(1) + 'px,0)';
     }
     window.addEventListener('scroll', function () {
       if (!ticking) { ticking = true; requestAnimationFrame(update); }
@@ -77,7 +75,11 @@
     toast.textContent = msg;
     toast.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 2000);
+    toastTimer = setTimeout(function () {
+      toast.classList.remove('show');
+      // limpa depois do fade (.25s) para a região aria-live não guardar texto obsoleto
+      setTimeout(function () { if (!toast.classList.contains('show')) toast.textContent = ''; }, 300);
+    }, 2000);
   }
 
   /* ---------- 6. copiar contato ---------- */
@@ -87,6 +89,7 @@
     }
     // fallback (http / navegadores antigos)
     return new Promise(function (resolve, reject) {
+      var prev = document.activeElement;
       var ta = document.createElement('textarea');
       ta.value = text;
       ta.setAttribute('readonly', '');
@@ -94,9 +97,11 @@
       ta.style.opacity = '0';
       document.body.appendChild(ta);
       ta.select();
+      ta.setSelectionRange(0, ta.value.length); // iOS
       try { document.execCommand('copy') ? resolve() : reject(); }
       catch (err) { reject(err); }
       document.body.removeChild(ta);
+      if (prev && prev.focus) prev.focus();
     });
   }
   function setupCopy() {
@@ -137,13 +142,19 @@
 
   /* ---------- init ---------- */
   function init() {
-    if (reduce) root.classList.add('reduce-motion');
-    enterHero();
-    setupReveal();
-    setupParallax();
-    setupPress();
-    setupCopy();
-    setupShare();
+    root.classList.add('ready'); // cancela a rede de segurança do <head>
+    try {
+      if (reduce) root.classList.add('reduce-motion');
+      enterHero();
+      setupReveal();
+      setupParallax();
+      setupPress();
+      setupCopy();
+      setupShare();
+    } catch (err) {
+      root.classList.remove('js'); // qualquer erro: página estática completa
+      throw err;
+    }
   }
 
   if (document.readyState === 'loading') {

@@ -31,13 +31,21 @@
 
   <!-- fontes self-hosted (scripts/fetch_fonts.py); preload só das duas que aparecem acima da dobra -->
   <link rel="preload" href="assets/fonts/cormorant-garamond-600.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/style.css">
 
   <!-- marca html.js antes do primeiro paint: sem JS (ou sem IntersectionObserver) a página fica estática e completa -->
-  <script>if ('IntersectionObserver' in window) document.documentElement.classList.add('js');</script>
-  <script src="js/main.js" defer></script>
+  <script>
+    if ('IntersectionObserver' in window) {
+      document.documentElement.classList.add('js');
+      // rede de segurança: se main.js não rodar em 3s (404, bloqueio, exceção), volta ao modo estático
+      setTimeout(function () {
+        if (!document.documentElement.classList.contains('ready')) document.documentElement.classList.remove('js');
+      }, 3000);
+    }
+  </script>
+  <script src="js/main.js" defer onerror="document.documentElement.classList.remove('js')"></script>
 
   <script type="application/ld+json">
   {
@@ -119,7 +127,7 @@
       </h1>
 
       <p class="hero__role eyebrow" data-anim style="--i:2">
-        UGC Creator <span class="hero__dot" aria-hidden="true">•</span> Furo Humanizado
+        UGC Creator <span class="hero__dot" aria-hidden="true">•</span> <span class="nowrap">Furo Humanizado</span>
       </p>
 
       <p class="hero__tagline" data-anim style="--i:3">
@@ -180,7 +188,7 @@
       </a>
       <a class="btn" style="--i:2" href="https://youtube.com/@tatianecavalcantilima" target="_blank" rel="noopener">
         <span class="btn__icon"><svg aria-hidden="true"><use href="#i-youtube"/></svg></span>
-        <span class="btn__text"><span class="btn__title">YouTube</span><span class="btn__sub">Vlogs e conteúdos completos</span></span>
+        <span class="btn__text"><span class="btn__title">YouTube</span><span class="btn__sub">Vlogs e vídeos completos</span></span>
         <svg class="btn__chev" aria-hidden="true"><use href="#i-chevron"/></svg>
       </a>
       <a class="btn" style="--i:3" href="https://kwai-video.com/u/@Tatycavalcantii/YVCEOqAB" target="_blank" rel="noopener">
@@ -240,7 +248,7 @@
 
   <!-- ===== CONTATO ===== -->
   <section class="card contact" data-reveal aria-labelledby="contato-title">
-    <h2 class="sr-only" id="contato-title">Contato</h2>
+    <h2 class="sr-only" id="contato-title">Telefone, Instagram e QR code</h2>
 
     <div class="contact__qr">
       <img src="assets/qr.svg" width="132" height="132" alt="QR code que abre este cartão virtual" loading="lazy" decoding="async">
