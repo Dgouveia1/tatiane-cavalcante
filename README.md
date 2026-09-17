@@ -30,7 +30,7 @@ Para mudar a mensagem, codifique o texto (ex.: `encodeURIComponent` no console d
 | Domínio final (`https://DOMINIO/`) | `index.html` (canonical, og:url, og:image, JSON-LD, linha do site no contato), `.htaccess` |
 | E-mail de contato | `index.html` — bloco `TODO:EMAIL` comentado no card de contato |
 | QR code com o domínio final | `python scripts/make_qr.py https://dominio/` |
-| HTTPS forçado | `.htaccess` — descomentar o bloco **só depois** que o AutoSSL do cPanel emitir o certificado |
+| HTTPS forçado (só HostGator) | `.htaccess` — descomentar o bloco **só depois** que o AutoSSL do cPanel emitir o certificado. Na Vercel é automático |
 
 ## Regenerar assets
 
@@ -67,6 +67,17 @@ npx playwright screenshot --viewport-size=1200,630 --wait-for-timeout=1500 scrip
 python -m http.server 8080
 # http://localhost:8080
 ```
+
+## Publicar na Vercel (domínio novo)
+
+O repo já tem `vercel.json` (cache das fontes/assets + headers de segurança) e `.vercelignore`
+(não sobe `scripts/`, `dist/`, README, `.htaccess`). Sem build: framework preset **Other**, root `/`.
+
+1. vercel.com → **Add New → Project** → importar `Dgouveia1/tatiane-cavalcante` → Deploy.
+2. **Settings → Domains** → adicionar o domínio final → apontar o DNS conforme a Vercel indicar
+   (registro `A` para `76.76.21.21` ou `CNAME` para `cname.vercel-dns.com`). SSL é automático.
+3. Depois que o domínio responder: trocar `DOMINIO` (ver "Pendências"), regerar QR/OG, commit + push
+   (a Vercel redeploya sozinha a cada push na `main`).
 
 ## Publicar no cPanel (HostGator)
 

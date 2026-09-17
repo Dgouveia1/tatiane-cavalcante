@@ -1,0 +1,6 @@
+# só index.html, css/, js/ e assets/ vão para a Vercel
+scripts
+dist
+README.md
+.htaccess
+.gitattributes

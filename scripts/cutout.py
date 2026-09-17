@@ -11,7 +11,7 @@ Requisitos: pip install opencv-python-headless pillow
 Opcional (bordas muito melhores): rembg ("pip install rembg[cpu]", exige VC++ Redistributable no Windows)
   ou Node + "npm i onnxruntime-web" + modelo em scripts/_raw/isnet-general-use.onnx (ver ISNET_URL).
 
-O GrabCut foi calibrado para ESTA foto (parede cinza-clara, sombra quente à direita, calça verde-sálvia).
+O GrabCut foi calibrado para ESTA foto (parede cinza-clara, sombra quente à direita, calça verde-sálvia, piso de madeira).
 Se a cliente mandar outra foto, prefira o rembg ou ajuste as constantes abaixo.
 """
 import sys
@@ -27,9 +27,9 @@ OUT_WEBP = ROOT / "assets" / "tati.webp"
 OUT_PNG = ROOT / "assets" / "tati.png"
 PREVIEW = ROOT / "scripts" / "_raw" / "preview.png"
 
-CROP_Y1 = 520          # linha (no original) acima do rodapé/chão — ficamos da cabeça até o joelho
+CROP_Y1 = None         # None = corpo inteiro (cabeça aos sapatos). Use 520 para cortar acima do rodapé/chão (até o joelho)
 RECT = (395, 15, 770)  # x0, y0, x1 do retângulo "provavelmente frente" (y1 = CROP_Y1)
-OUT_HEIGHT = 760       # altura final em px (largura segue a proporção); exibida a no máx. ~230 css px de largura => 2x DPR
+OUT_HEIGHT = 960       # altura final em px (largura segue a proporção); exibida a no máx. ~250 css px de largura => 2x DPR
 
 # modelo do rembg, para o caminho WASM (git-ignored; ~176 MB)
 ISNET_URL = "https://github.com/danielgatis/rembg/releases/download/v0.0.0/isnet-general-use.onnx"
@@ -122,6 +122,10 @@ def cut_grabcut(bgr: np.ndarray) -> np.ndarray:
     mask = np.full(work.shape[:2], cv2.GC_PR_BGD, np.uint8)
     x0, y0, x1 = RECT
     mask[y0:, x0:x1] = cv2.GC_PR_FGD
+    # piso de madeira (quente e saturado) também é fundo
+    floor = (hue < 30) & (sat > 80) & (val > 110)
+    floor[:540, :] = False
+    wall = wall | floor
 
     # parede "certamente fundo": pixels de parede a mais de 6px de qualquer pixel não-parede
     dist_to_notwall = cv2.distanceTransform(wall.astype(np.uint8), cv2.DIST_L2, 3)
@@ -167,7 +171,9 @@ def main() -> None:
     if not RAW.exists():
         sys.exit(f"Foto original não encontrada: {RAW}")
 
-    bgr = cv2.imread(str(RAW))[:CROP_Y1]
+    bgr = cv2.imread(str(RAW))
+    if CROP_Y1:
+        bgr = bgr[:CROP_Y1]
 
     alpha = None
     if not force_grabcut:
